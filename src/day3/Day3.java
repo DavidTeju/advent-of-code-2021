@@ -39,7 +39,7 @@ public class Day3 {
             }else
                 throw  new Exception("Challenge doesn't specify what to do if equal values");
         }
-        return convertBinary(epsilon)*convertBinary(gamma);
+        return Long.valueOf(epsilon, 2) * Long.valueOf(gamma, 2);
     }
 
     static long partTwo() throws Exception {
@@ -49,8 +49,8 @@ public class Day3 {
             fullInput.add(sc.next());
 
         return
-                convertBinary(rating("oxygen", fullInput, 0).replace("\n", "")) *
-                        convertBinary(rating("CO2", fullInput, 0).replace("\n", ""));
+                Long.valueOf(rating("oxygen", fullInput, 0).replace("\n", ""), 2) *
+                        Long.valueOf(rating("CO2", fullInput, 0).replace("\n", ""), 2);
     }
 
     /**
@@ -73,6 +73,7 @@ public class Day3 {
         }
     }
 
+    @Deprecated
     static long convertBinary(String toConvert){
         long binary = Long.parseLong(toConvert);
         int n = 0;
