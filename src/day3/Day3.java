@@ -105,5 +105,4 @@ public class Day3 {
 //    static int scrubberRating (String element, ArrayList<Integer> inConsideration, int position){
 //        return 0;
 //    }
-
 }
