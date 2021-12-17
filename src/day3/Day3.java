@@ -9,21 +9,19 @@ public class Day3 {
 
     public static void main(String[] args) {
         try {
-            System.out.println(part1());
+            System.out.println(partOne());
             System.out.println(partTwo());
         } catch (Exception e) {
-            System.out.println("It's a main error");
             e.printStackTrace();
         }
     }
 
-    static long part1() throws Exception {
+    static long partOne() throws Exception {
         final Scanner sc = new Scanner(new File("src\\day3\\input.txt"));
         String gamma = "";
         String epsilon = "";
         String nextValue = sc.next();
         int[] dominantCounter = new int[nextValue.length()];
-
         analyseNumber(dominantCounter, nextValue);
 
         while (sc.hasNext()) {
@@ -41,18 +39,18 @@ public class Day3 {
             }else
                 throw  new Exception("Challenge doesn't specify what to do if equal values");
         }
-        /* alternative method to convert String gamma in binary form to int intGamma in Decimal
-        * Much more concise but harder to read and slower
-        int intGamma = 0;
-        int intEpsilon = 0;
-        for (int i = gamma.length(), j = 0; i>0; i--, j++)
-            intGamma += Integer.parseInt(""+gamma.charAt(j)) * (int) Math.pow(2, i-1);
-
-        for (int i = epsilon.length(), j = 0; i>0; i--, j++)
-            intEpsilon += Integer.parseInt(""+epsilon.charAt(j)) * Math.pow(2, i-1);
-        return intGamma*intEpsilon;
-        */
         return convertBinary(epsilon)*convertBinary(gamma);
+    }
+
+    static long partTwo() throws Exception {
+        final Scanner sc = new Scanner(new File("src\\day3\\input.txt"));
+        List<String> fullInput = new ArrayList<>();
+        while (sc.hasNext())
+            fullInput.add(sc.next());
+
+        return
+                convertBinary(rating("oxygen", fullInput, 0).replace("\n", "")) *
+                        convertBinary(rating("CO2", fullInput, 0).replace("\n", ""));
     }
 
     /**
@@ -90,23 +88,9 @@ public class Day3 {
         return ternary;
     }
 
-    static long partTwo() throws Exception {
-        final Scanner sc = new Scanner(new File("src\\day3\\input.txt"));
-        List<String> fullInput = new ArrayList<>();
-        while (sc.hasNext())
-            fullInput.add(sc.next());
-
-        return
-                convertBinary(rating("oxygen", fullInput, 0).replace("\n", "")) *
-                        convertBinary(rating("CO2", fullInput, 0).replace("\n", ""));
-    }
-
     static String rating(String element, List<String> toAnalyze, int position){
         if (toAnalyze.size()==1)//If there is only one number left, it returns that number
-        {
-            System.out.println(toAnalyze.get(0));
             return toAnalyze.get(0);
-        }
 
         List<List<String>> lists = new ArrayList<>();
         lists.add(new ArrayList<>());
@@ -122,7 +106,6 @@ public class Day3 {
                 throw new IllegalArgumentException("invalid input detected. All input must be in binary");
             }
         }
-
 
         int dominant;
         if (lists.get(0).size()>lists.get(1).size())
