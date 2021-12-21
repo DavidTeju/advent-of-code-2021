@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Day2 {
-
-    ///*
+    /**
+     @author David Tejuosho
+     @see <a href = "https://adventofcode.com/2021/day/2">Day 2</a>
+     */
     public static void main(String[] args) throws FileNotFoundException {
         System.out.println(partOne());
         System.out.println(partTwo());
     }
-    //*/
-    //Remove above comment block to see output of both functions
 
     static int partOne() throws FileNotFoundException {
         final Scanner sc = new Scanner (new File("src\\day2\\input"));

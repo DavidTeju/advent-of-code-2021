@@ -2,11 +2,15 @@ package day3;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Day3 {
-
+    /**
+     @author David Tejuosho
+     @see <a href = "https://adventofcode.com/2021/day/3">Day 3</a>
+     */
     public static void main(String[] args) {
         try {
             System.out.println(partOne());
@@ -22,8 +26,8 @@ public class Day3 {
         String epsilon = "";
         String nextValue = sc.next();
         int[] dominantCounter = new int[nextValue.length()];
-        analyseNumber(dominantCounter, nextValue);
 
+        analyseNumber(dominantCounter, nextValue);
         while (sc.hasNext()) {
             analyseNumber(dominantCounter, nextValue);
             nextValue = sc.next();
@@ -43,14 +47,13 @@ public class Day3 {
     }
 
     static long partTwo() throws Exception {
-        final Scanner sc = new Scanner(new File("src\\day3\\input.txt"));
-        List<String> fullInput = new ArrayList<>();
-        while (sc.hasNext())
-            fullInput.add(sc.next());
+        Scanner myScanner = new Scanner(new File("src\\day3\\input.txt"));
+        myScanner.useDelimiter("impossible String");
+        List<String> fullInput = Arrays.asList(myScanner.next().split("\n"));
 
         return
-                Long.valueOf(rating("oxygen", fullInput, 0).replace("\n", ""), 2) *
-                        Long.valueOf(rating("CO2", fullInput, 0).replace("\n", ""), 2);
+                Long.parseLong(rating("oxygen", fullInput, 0).trim(), 2) *
+                        Long.parseLong(rating("CO2", fullInput, 0).trim(), 2);
     }
 
     /**
@@ -73,22 +76,6 @@ public class Day3 {
         }
     }
 
-    @Deprecated
-    static long convertBinary(String toConvert){
-        long binary = Long.parseLong(toConvert);
-        int n = 0;
-        long temp;
-        int ternary = 0;
-        //This method is faster and saves runtime
-        while(binary > 0){
-            temp = binary%10;
-            ternary += (int) (temp * Math.pow(2, n));
-            binary = binary/10;
-            n++;
-        }
-        return ternary;
-    }
-
     static String rating(String element, List<String> toAnalyze, int position){
         if (toAnalyze.size()==1)//If there is only one number left, it returns that number
             return toAnalyze.get(0);
@@ -96,7 +83,6 @@ public class Day3 {
         List<List<String>> lists = new ArrayList<>();
         lists.add(new ArrayList<>());
         lists.add(new ArrayList<>());
-        List<String> toPass;
 
         for (String nextValue: toAnalyze){
             if (nextValue.charAt(position) == '0') {
@@ -114,6 +100,7 @@ public class Day3 {
         else
             dominant = 1;
 
+        List<String> toPass;
         if (element.equals("oxygen"))
             toPass = lists.get(dominant);
         else
