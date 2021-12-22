@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Day4 {
     /**
      @author David Tejuosho
-     @see <a href = "https://adventofcode.com/2021/day/4">Day 4</a>
+     @see <a href="https://adventofcode.com/2021/day/4">Day 4</a>
      */
     public static void main(String[] args) {
         try {

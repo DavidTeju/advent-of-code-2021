@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Day2 {
     /**
      @author David Tejuosho
-     @see <a href = "https://adventofcode.com/2021/day/2">Day 2</a>
+     @see <a href="https://adventofcode.com/2021/day/2">Day 2</a>
      */
     public static void main(String[] args) throws FileNotFoundException {
         System.out.println(partOne());
