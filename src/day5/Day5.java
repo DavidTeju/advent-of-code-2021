@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Day5 {
+    /**
+     @author David Tejuosho
+     @see <a href="https://adventofcode.com/2021/day/5">Day 5</a>
+     */
     public static void main(String[] args) {
         try {
             System.out.println(partOne());
@@ -18,7 +22,6 @@ public class Day5 {
     static int partOne() throws FileNotFoundException {
         HashMap<String, Integer> map = new HashMap<>();
         Scanner input = new Scanner(new File("src\\day5\\input.txt"));
-        Scanner nextLine;
         int [] points = new int[4];
 
         while (input.hasNext()) {
@@ -40,7 +43,6 @@ public class Day5 {
     static int partTwo() throws FileNotFoundException {
         HashMap<String, Integer> map = new HashMap<>();
         Scanner input = new Scanner(new File("src\\day5\\input.txt"));
-        Scanner nextLine;
         int [] points = new int[4];
 
         while (input.hasNext()) {
