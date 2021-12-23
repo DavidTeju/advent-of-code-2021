@@ -7,20 +7,14 @@ import java.util.Scanner;
 
 public class Day5 {
     public static void main(String[] args) {
-        //For each line,
-        //Create Scanner with line after replacing " -> " with ","
-        //Check if it's vertical/horizontal by checking if points[0] = points[2] or points[1] = points[3]
-        //You can either check them individually and then work based on if it's vertical or horizontal
-        //Or you could have a double loop, and it would be still O(n) time
-        //Load the points unto a HashMap with xy as key and number of intersections as content
-        //Whenever it contains the point already, add one to the content
-        //At the end, go through every point and count the number that have 2 or more as content
         try {
             System.out.println(partOne());
+            System.out.println(partTwo());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
     static int partOne() throws FileNotFoundException {
         HashMap<String, Integer> map = new HashMap<>();
         Scanner input = new Scanner(new File("src\\day5\\input.txt"));
@@ -28,33 +22,86 @@ public class Day5 {
         int [] points = new int[4];
 
         while (input.hasNext()) {
-            nextLine = new Scanner(input.nextLine().replace(" -> ", ","));
-            nextLine.useDelimiter(",");
-
-            for (int i = 0; i<4; i++)
-                points[i] = Integer.parseInt(nextLine.next());
-
+            loadPoints(input, points);
                 /*
                 points[0] is x1
                 points[1] is y1
                 points[2] is x2
                 points[3] is y2
                  */
-            //Magical nested noop with O(n) time complexity
-            if (points[0] == points[2]||points[1] == points[3])
-                for (int i = Math.min(points[0], points[2]); i<=Math.max(points[0], points[2]); i++)
-                    for (int j = Math.min(points[1], points[3]); j<=Math.max(points[1], points[3]);j++)
-                        if (map.containsKey("" + i + "," + j))
-                            map.put("" + i + "," + j, map.get("" + i + "," + j)+1);
-                        else
-                            map.put("" + i + "," + j, 1);
+
+            if (points[0] == points[2]|| points[1] == points[3])
+            mapLine(map, points);
         }
 
+        return checkNumDanger(map);
+    }
+
+    static int partTwo() throws FileNotFoundException {
+        HashMap<String, Integer> map = new HashMap<>();
+        Scanner input = new Scanner(new File("src\\day5\\input.txt"));
+        Scanner nextLine;
+        int [] points = new int[4];
+
+        while (input.hasNext()) {
+            loadPoints(input, points);
+
+            if (points[0] == points[2]|| points[1] == points[3])
+                mapLine(map, points);
+            else mapDiagonal(map, points);
+        }
+
+        return checkNumDanger(map);
+    }
+
+    static void loadPoints (Scanner input, int[] points) {
+        Scanner nextLine;
+        nextLine = new Scanner(input.nextLine().replace(" -> ", ",")).useDelimiter(",");
+        //Takes next line, replaces the -> with a comma and uses commas as the delimiter
+
+        for (int i = 0; i < 4; i++)
+            points[i] = Integer.parseInt(nextLine.next()); //Loads in the bound points on the pine
+    }
+
+    static void mapLine (HashMap<String, Integer> map, int[] points) {
+        //Magical nested noop with O(n) time complexity
+        for (int i = Math.min(points[0], points[2]); i<=Math.max(points[0], points[2]); i++)
+            for (int j = Math.min(points[1], points[3]); j<=Math.max(points[1], points[3]); j++)
+                fillPoint(map, i, j);
+    }
+
+    static void mapDiagonal(HashMap<String, Integer> map, int[] points){
+        int j = points[1];
+        int i = points[0];
+        int numOfTimesToLoop = Math.abs(points[0]-points[2])+1;
+
+        for (int cntr = 0; cntr<numOfTimesToLoop; cntr++){
+            fillPoint(map, i, j);
+
+            if (points[0]<=points[2])
+                i++;
+            else i--;
+
+            if (points[1]<=points[3])
+                j++;
+            else j--;
+        }
+
+    }
+
+    static void fillPoint (HashMap<String, Integer> map, int i, int j) {
+        if (map.containsKey("" + i + "," + j))//Checks if that point has been touched by a line
+            map.put("" + i + "," + j, map.get("" + i + "," + j)+1);//If yes, it adds to the value of the point
+        else
+            map.put("" + i + "," + j, 1);//If no, it puts the point with a value of 1
+    }
+
+    static int checkNumDanger(HashMap<String, Integer> map){
         int numOfDanger = 0;
         for (var value: map.values()){
             if (value>=2)
                 numOfDanger++;
-        }
+        }//Counts the number of points with values >= 2
         return numOfDanger;
     }
 }
