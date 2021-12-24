@@ -17,7 +17,9 @@ public class Day8 {
      <p>If it is 2, 3, 4, or 7, increment the number of vaues(numOfValues)</p>
      <p>
      <p>partTwo was significantly harder</p>
-     <p>Using the same logic from partOne, I </p>
+     <p>For this one, I analysed the patterns in a three step process:</p>
+     <p>The first step was to identify the patterns for 1, 4, 7, and 8 using the same logic from partOne</p>
+     <p>The second and third steps are explained in-line</p>
      */
     public static void main (String[] args) {
         try {
@@ -32,12 +34,12 @@ public class Day8 {
         Scanner input = new Scanner(new File("src\\day8\\input.txt")).useDelimiter("\\|");
         int numOfValues = 0;
         int length;
-        String[] toUse;
+        String[] arrayOfPatterns;
         while (input.hasNext()) {
             input.next();
-            toUse = input.nextLine().replace("|", "").trim().split(" ");
-            for (int i = 0; i<4; i++) {
-                length = toUse[i].length();
+            arrayOfPatterns = input.nextLine().replace("|", "").trim().split(" ");
+            for (String pattern: arrayOfPatterns) {
+                length = pattern.length();
                 if (length == 2 || length == 3 || length == 4 || length ==7)
                     numOfValues++;
             }
@@ -54,6 +56,7 @@ public class Day8 {
         String[] outputValues;
         while (input.hasNext()) {
             lineSegments = input.nextLine().split("\\|");
+            //Divide the line into the pattern and the output.
             valuesBeforeAnalysis = lineSegments[0].split(" ");
             outputValues = lineSegments[1].split(" ");
             analysedValues = analyseValues(valuesBeforeAnalysis);
@@ -72,26 +75,24 @@ public class Day8 {
 
     //The initial analysis gives us the values/keys for analysed[1], analysed[4], analysed[7], analysed[8]
     static void initialAnalysis (String[] toAnalyse, String[] analysed) {
-        for (int i = 0; i<10; i++)
-            if (toAnalyse[i] != null)
-                switch (toAnalyse[i].length()) {
-                    case 7 -> {
-                        analysed[8] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
-                    case 2 -> {
-                        analysed[1] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
-                    case 4 -> {
-                        analysed[4] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
-                    case 3 -> {
-                        analysed[7] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
+        for (int i = 0; i<10; i++) {
+            if (toAnalyse[i] == null) continue;
+            switch (toAnalyse[i].length()) {
+                case 7 -> {
+                    analysed[8] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } case 2 -> {
+                    analysed[1] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } case 4 -> {
+                    analysed[4] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } case 3 -> {
+                    analysed[7] = toAnalyse[i];
+                    toAnalyse[i] = null;
                 }
+            }
+        }
     }
 
     //This analysis can only be done after our initial analysis because it relies on the values of:
@@ -99,32 +100,39 @@ public class Day8 {
     //which are initialized after the initial analysis
     static void secondAnalysis (String[] toAnalyse, String[] analysed){
         for (int i = 0; i<10; i++)
-            if (toAnalyse[i] != null)
-                if (toAnalyse[i].length() == 6)//You might need to do an inordered contain method
-                    if (unorderedContains(toAnalyse[i], analysed[4])) {
-                        analysed[9] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
-                    else if (unorderedContains(toAnalyse[i], analysed[1])) {
-                        analysed[0] = toAnalyse[i];
-                        toAnalyse[i] = null;
-                    }
-                    else { analysed[6] = toAnalyse[i]; toAnalyse[i] = null; }
+            //0, 6, and 9 are the only patterns with length 6
+            if (toAnalyse[i] != null && toAnalyse[i].length() == 6)
+                //Nine is the only of the three that contains all the lines that four's pattern contains
+                if (unorderedContains(toAnalyse[i], analysed[4])) {
+                    analysed[9] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                    //After this, we have 0 and 6 left
+                    //Zero is the only of the two that contains all the lines that one's pattern contains
+                } else if (unorderedContains(toAnalyse[i], analysed[1])) {
+                    analysed[0] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } else {//Only Six is left
+                    analysed[6] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                }
     }
 
     //This analysis happens after the first two analysis
     static void lastAnalysis (String[] toAnalyse, String[] analysed) {
-        for (int i = 0; i<10; i++)
-            if (toAnalyse[i] != null)
-                if (unorderedContains(toAnalyse[i], analysed[1])) {
-                    analysed[3] = toAnalyse[i];
-                    toAnalyse[i] = null;
-                }
-                else if(unorderedContains(toAnalyse[i], intersection(analysed[6], analysed[1]))) {
-                    analysed[5] = toAnalyse[i];
-                    toAnalyse[i] = null;
-                }
-                else { analysed[2] = toAnalyse[i]; toAnalyse[i] = null;}
+        for (int i = 0; i<10; i++) {//2, 3, and 5 are the only patterns left
+            if (toAnalyse[i] == null) continue; //Skips analysis for all values that are null/have been analysed
+            if (unorderedContains(toAnalyse[i], analysed[1])) {
+                //Nine is the only one of the three that contains all the lines that one's pattern contains
+                analysed[3] = toAnalyse[i];
+                toAnalyse[i] = null;
+            } else if (unorderedContains(toAnalyse[i], intersection(analysed[6], analysed[1]))) {
+                analysed[5] = toAnalyse[i];
+                toAnalyse[i] = null;
+            } else {
+                analysed[2] = toAnalyse[i];
+                toAnalyse[i] = null;
+            }
+        }
     }
 
     static int parseValue (String[] toParse, String[] key){
@@ -152,8 +160,7 @@ public class Day8 {
         return true;
     }
 
-    //Number 1 and number 6 have only one intersection so we can return as soon as we find it
-    //If there's no intersection (becca
+    //Number 1 and number 6 have only one intersection, so we can return as soon as we find it
     static String intersection(String first, String second){
         try {
             for (char letter : first.toCharArray())
