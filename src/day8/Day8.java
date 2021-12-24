@@ -5,20 +5,20 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Day8 {
-/**
- @author David Tejuosho
- @see <a href="https://adventofcode.com/2021/day/8">Day 8</a>
- <p>For partOne, I needed to count the occurences of 1, 4, 7, and 8.</p>
- <p>This was easy because the signal patterns for those numbers had unique lengths of 2, 3, 4, and 7.</p>
- <p> All I had to do was:</p>
- <p>ignore the values before the "|", split the values after the "|" into an array of 4 Strings,</p>
- <p>For each value/String in the array,</p>
- <p>check the length of the String,</p>
- <p>If it is 2, 3, 4, or 7, increment the number of vaues(numOfValues)</p>
- <p>
- <p>partTwo was significantly harder</p>
-<p>Using the same logic from partOne, I </p>
- */
+    /**
+     @author David Tejuosho
+     @see <a href="https://adventofcode.com/2021/day/8">Day 8</a>
+     <p>For partOne, I needed to count the occurences of 1, 4, 7, and 8.</p>
+     <p>This was easy because the signal patterns for those numbers had unique lengths of 2, 3, 4, and 7.</p>
+     <p> All I had to do was:</p>
+     <p>ignore the values before the "|", split the values after the "|" into an array of 4 Strings,</p>
+     <p>For each value/String in the array,</p>
+     <p>check the length of the String,</p>
+     <p>If it is 2, 3, 4, or 7, increment the number of vaues(numOfValues)</p>
+     <p>
+     <p>partTwo was significantly harder</p>
+     <p>Using the same logic from partOne, I </p>
+     */
     public static void main (String[] args) {
         try {
             System.out.println(partOne());
@@ -64,64 +64,67 @@ public class Day8 {
 
     static String[] analyseValues (String[] toAnalyse){
         String[] analysed = new String[10];
-        for (int j = 0; j<3; j++)
-            for (int i = 0, length = toAnalyse.length; i<length; i++){
-                if (toAnalyse[i] != null){
-                    initialAnalysis(toAnalyse, analysed, i);
-                }
-            }
+        initialAnalysis(toAnalyse, analysed);
+        secondAnalysis(toAnalyse, analysed);
+        lastAnalysis(toAnalyse, analysed);
         return analysed;
     }
 
     //The initial analysis gives us the values/keys for analysed[1], analysed[4], analysed[7], analysed[8]
-    static void initialAnalysis (String[] toAnalyse, String[] analysed, int i) {
-        switch (toAnalyse[i].length()) {
-            case 7 -> {
-                analysed[8] = toAnalyse[i];
-                toAnalyse[i] = null;
-            }
-            case 2 -> {
-                analysed[1] = toAnalyse[i];
-                toAnalyse[i] = null;
-            }
-            case 4 -> {
-                analysed[4] = toAnalyse[i];
-                toAnalyse[i] = null;
-            }
-            case 3 -> {
-                analysed[7] = toAnalyse[i];
-                toAnalyse[i] = null;
-            }
-            default -> secondAnalysis(analysed, toAnalyse[i]);
-        }
+    static void initialAnalysis (String[] toAnalyse, String[] analysed) {
+        for (int i = 0; i<10; i++)
+            if (toAnalyse[i] != null)
+                switch (toAnalyse[i].length()) {
+                    case 7 -> {
+                        analysed[8] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                    case 2 -> {
+                        analysed[1] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                    case 4 -> {
+                        analysed[4] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                    case 3 -> {
+                        analysed[7] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                }
     }
 
     //This analysis can only be done after our initial analysis because it relies on the values of:
     //analysed[1], analysed[4], analysed[7], analysed[8]
     //which are initialized after the initial analysis
-    static void secondAnalysis (String[] analysed, String toAnalyse){
-        try {
-            if (toAnalyse.length() == 6)//You might need to do an inordered contain method
-                if (unorderedContains(toAnalyse, analysed[4]))
-                    analysed[9] = toAnalyse;
-                else if (unorderedContains(toAnalyse, analysed[1]))
-                    analysed[0] = toAnalyse;
-                else analysed[6] = toAnalyse;
-            else
-                lastAnalysis(analysed, toAnalyse);
-        }
-        catch (NullPointerException ignored){
-            //Ignored because the first iteration will have some needed values as null but as soon as the first iteration is done, it will have been initialized
-        }
+    static void secondAnalysis (String[] toAnalyse, String[] analysed){
+        for (int i = 0; i<10; i++)
+            if (toAnalyse[i] != null)
+                if (toAnalyse[i].length() == 6)//You might need to do an inordered contain method
+                    if (unorderedContains(toAnalyse[i], analysed[4])) {
+                        analysed[9] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                    else if (unorderedContains(toAnalyse[i], analysed[1])) {
+                        analysed[0] = toAnalyse[i];
+                        toAnalyse[i] = null;
+                    }
+                    else { analysed[6] = toAnalyse[i]; toAnalyse[i] = null; }
     }
 
     //This analysis happens after the first two analysis
-    static void lastAnalysis (String[] analysed, String toAnalyse) {
-        if (unorderedContains(toAnalyse, analysed[1]))
-            analysed[3] = toAnalyse;
-        else if(unorderedContains(toAnalyse, intersection(analysed[6], analysed[1])))
-            analysed[5] = toAnalyse;
-        else analysed[2] = toAnalyse;
+    static void lastAnalysis (String[] toAnalyse, String[] analysed) {
+        for (int i = 0; i<10; i++)
+            if (toAnalyse[i] != null)
+                if (unorderedContains(toAnalyse[i], analysed[1])) {
+                    analysed[3] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                }
+                else if(unorderedContains(toAnalyse[i], intersection(analysed[6], analysed[1]))) {
+                    analysed[5] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                }
+                else { analysed[2] = toAnalyse[i]; toAnalyse[i] = null;}
     }
 
     static int parseValue (String[] toParse, String[] key){
