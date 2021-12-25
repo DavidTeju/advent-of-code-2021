@@ -102,12 +102,12 @@ public class Day8 {
         for (int i = 0; i<10; i++)
             //0, 6, and 9 are the only patterns with length 6
             if (toAnalyse[i] != null && toAnalyse[i].length() == 6)
-                //Nine is the only of the three that contains all the lines that four's pattern contains
+                //Nine is the only one of the three that contains all the lines that four's pattern contains
                 if (unorderedContains(toAnalyse[i], analysed[4])) {
                     analysed[9] = toAnalyse[i];
                     toAnalyse[i] = null;
                     //After this, we have 0 and 6 left
-                    //Zero is the only of the two that contains all the lines that one's pattern contains
+                    //Zero is the only one of the two that contains all the lines that one's pattern contains
                 } else if (unorderedContains(toAnalyse[i], analysed[1])) {
                     analysed[0] = toAnalyse[i];
                     toAnalyse[i] = null;
@@ -136,12 +136,12 @@ public class Day8 {
     }
 
     static int parseValue (String[] toParse, String[] key){
-        String numberValue = "";
+        StringBuilder numberValue = new StringBuilder();
         for (String toFind: toParse)
             for (int j = 0; j<10; j++)
                 if (unOrderedEquals(toFind, key[j]))
-                    numberValue+=j;
-        return Integer.parseInt(numberValue);
+                    numberValue.append(j);
+        return Integer.parseInt(numberValue.toString());
     }
 
     static boolean unorderedContains (String container, String contained){

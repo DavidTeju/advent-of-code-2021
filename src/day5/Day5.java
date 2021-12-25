@@ -77,7 +77,7 @@ public class Day5 {
         int i = points[0];
         int numOfTimesToLoop = Math.abs(points[0]-points[2])+1;
 
-        for (int cntr = 0; cntr<numOfTimesToLoop; cntr++){
+        for (int counter = 0; counter<numOfTimesToLoop; counter++){
             fillPoint(map, i, j);
 
             if (points[0]<=points[2])

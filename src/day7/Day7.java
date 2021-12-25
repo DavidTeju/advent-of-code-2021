@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Day7 {
     public static void main (String[] args) throws FileNotFoundException {
+        System.out.println(partOne());
         System.out.println(partTwo());
     }
 

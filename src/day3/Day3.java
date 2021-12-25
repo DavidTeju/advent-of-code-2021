@@ -22,8 +22,8 @@ public class Day3 {
 
     static long partOne() throws Exception {
         final Scanner sc = new Scanner(new File("src\\day3\\input.txt"));
-        String gamma = "";
-        String epsilon = "";
+        StringBuilder gamma = new StringBuilder();
+        StringBuilder epsilon = new StringBuilder();
         String nextValue = sc.next();
         int[] dominantCounter = new int[nextValue.length()];
 
@@ -35,15 +35,15 @@ public class Day3 {
 
         for (int bit : dominantCounter) {
             if (bit > 0){
-                gamma+="1";
-                epsilon+="0";
+                gamma.append("1");
+                epsilon.append("0");
             }else if (bit<0) {
-                gamma+="0";
-                epsilon+="1";
+                gamma.append("0");
+                epsilon.append("1");
             }else
                 throw  new Exception("Challenge doesn't specify what to do if equal values");
         }
-        return Long.valueOf(epsilon, 2) * Long.valueOf(gamma, 2);
+        return Long.valueOf(epsilon.toString(), 2) * Long.valueOf(gamma.toString(), 2);
     }
 
     static long partTwo() throws Exception {

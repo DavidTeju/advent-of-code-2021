@@ -63,6 +63,7 @@ public class Day6 {
         long temp;
         for (int i = 0; i<256; i++) {//For 80 days
             temp = fishes[0]; //Store the number of fish that are reproducing
+            //noinspection ManualArrayCopy
             for (int j = 0; j<8; j++)
                 fishes[j] = fishes[j+1];//Move the fishes to the lower day
             //Could be replaced with:
