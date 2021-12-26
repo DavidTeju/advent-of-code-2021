@@ -2,7 +2,8 @@ package day8;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day8 {
     /**
@@ -31,19 +32,15 @@ public class Day8 {
     }
 
     static int partOne() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src\\day8\\input.txt")).useDelimiter("\\|");
+        Scanner input = new Scanner(new File("src\\day8\\input.txt"));
         int numOfValues = 0;
-        int length;
-        String[] arrayOfPatterns;
-        while (input.hasNext()) {
-            input.next();
-            arrayOfPatterns = input.nextLine().replace("|", "").trim().split(" ");
-            for (String pattern: arrayOfPatterns) {
-                length = pattern.length();
-                if (length == 2 || length == 3 || length == 4 || length ==7)
+        while (input.hasNext())
+            for (String pattern: input.nextLine().split("\\|")[1].trim().split(" "))
+                //Take the next line, split it using "|", take the second half of the subsequent array,
+                //trim it, and split it into each word/pattern/digit then for each, check if the length is 2, 3, 4, 7
+                //and if true, increment the number of values.
+                if (pattern.length() == 2 || pattern.length() == 3 || pattern.length() == 4 || pattern.length() ==7)
                     numOfValues++;
-            }
-        }
         return numOfValues;
     }
 
@@ -51,25 +48,35 @@ public class Day8 {
         Scanner input = new Scanner(new File("src\\day8\\input.txt"));
         int totalValue = 0;
         String[] lineSegments;
-        String[] valuesBeforeAnalysis;
-        String[] analysedValues;
-        String[] outputValues;
+        Set<Character>[] valuesBeforeAnalysisSet;
+        Set<Character>[] analysedValues;
+        Set<Character>[] outputValues;
         while (input.hasNext()) {
             //Divide the line into the pattern and the output.
             lineSegments = input.nextLine().split("\\|");
             //Parse the patterns into an array
-            valuesBeforeAnalysis = lineSegments[0].split(" ");
+            valuesBeforeAnalysisSet = Arrays.stream(lineSegments[0]
+                                            .split(" "))
+                                            .map(word -> word.chars()
+                                            .mapToObj(c -> (char) c)
+                                            .collect(Collectors.toCollection(HashSet::new)))
+                                            .toArray(HashSet[]::new);
             //Parse the output into an array
-            outputValues = lineSegments[1].split(" ");
+            outputValues = Arrays.stream(lineSegments[1]
+                                .split(" "))
+                                .map(word -> word.chars()
+                                .mapToObj(c -> (char) c)
+                                .collect(Collectors.toCollection(HashSet::new)))
+                                .toArray(HashSet[]::new);
             //Analyse the vales: put the string patters into array indexes that represent what number the patterns represent
-            analysedValues = analyseValues(valuesBeforeAnalysis);
+            analysedValues = analyseValues(valuesBeforeAnalysisSet);
             totalValue += parseValue(outputValues, analysedValues);
         }
         return totalValue;
     }
 
-    static String[] analyseValues (String[] toAnalyse){
-        String[] analysed = new String[10];
+    static Set<Character>[] analyseValues (Set<Character>[] toAnalyse){
+        Set<Character>[] analysed = new HashSet[10];
         initialAnalysis(toAnalyse, analysed);
         secondAnalysis(toAnalyse, analysed);
         lastAnalysis(toAnalyse, analysed);
@@ -77,10 +84,10 @@ public class Day8 {
     }
 
     //The initial analysis gives us the values/keys for analysed[1], analysed[4], analysed[7], analysed[8]
-    static void initialAnalysis (String[] toAnalyse, String[] analysed) {
+    static void initialAnalysis (Set<Character>[] toAnalyse, Set<Character>[] analysed) {
         for (int i = 0; i<10; i++) {
             if (toAnalyse[i] == null) continue;
-            switch (toAnalyse[i].length()) {
+            switch (toAnalyse[i].size()) {
                 case 7 -> {
                     analysed[8] = toAnalyse[i];
                     toAnalyse[i] = null;
@@ -101,17 +108,17 @@ public class Day8 {
     //This analysis can only be done after our initial analysis because it relies on the values of:
     //analysed[1], analysed[4], analysed[7], analysed[8]
     //which are initialized after the initial analysis
-    static void secondAnalysis (String[] toAnalyse, String[] analysed){
+    static void secondAnalysis (Set<Character>[] toAnalyse, Set<Character>[] analysed){
         for (int i = 0; i<10; i++)
             //0, 6, and 9 are the only patterns with length 6
-            if (toAnalyse[i] != null && toAnalyse[i].length() == 6)
+            if (toAnalyse[i] != null && toAnalyse[i].size() == 6)
                 //Nine is the only one of the three that contains all the lines that four's pattern contains
-                if (unorderedContains(toAnalyse[i], analysed[4])) {
+                if (toAnalyse[i].containsAll(analysed[4])) {
                     analysed[9] = toAnalyse[i];
                     toAnalyse[i] = null;
                     //After this, we have 0 and 6 left
                     //Zero is the only one of the two that contains all the lines that one's pattern contains
-                } else if (unorderedContains(toAnalyse[i], analysed[1])) {
+                } else if (toAnalyse[i].containsAll(analysed[1])) {
                     analysed[0] = toAnalyse[i];
                     toAnalyse[i] = null;
                 } else {//Only Six is left
@@ -120,59 +127,29 @@ public class Day8 {
                 }
     }
 
-    static void lastAnalysis (String[] toAnalyse, String[] analysed) {
+    static void lastAnalysis (Set<Character>[] toAnalyse, Set<Character>[] analysed) {
         for (int i = 0; i<10; i++) {//2, 3, and 5 are the only patterns left
-            if (toAnalyse[i] == null) continue; //Skips analysis for all values that are null/have been analysed
-            if (unorderedContains(toAnalyse[i], analysed[1])) {
-                //Nine is the only one of the three that contains all the lines that one's pattern contains
-                analysed[3] = toAnalyse[i];
-                toAnalyse[i] = null;
-            } else if (unorderedContains(toAnalyse[i], intersection(analysed[6], analysed[1]))) {
-                analysed[5] = toAnalyse[i];
-                toAnalyse[i] = null;
-            } else {
-                analysed[2] = toAnalyse[i];
-                toAnalyse[i] = null;
-            }
+            if (toAnalyse[i] != null)// continue; //Skips analysis for all values that are null/have been analysed
+                if (toAnalyse[i].containsAll(analysed[1])) {
+                    //Nine is the only one of the three that contains all the lines that one's pattern contains
+                    analysed[3] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } else if (toAnalyse[i].containsAll(new HashSet<>(analysed[6].stream().filter(analysed[1]::contains).toList()))) {
+                    analysed[5] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                } else {
+                    analysed[2] = toAnalyse[i];
+                    toAnalyse[i] = null;
+                }
         }
     }
 
-    static int parseValue (String[] toParse, String[] key){
+    static int parseValue (Set<Character>[] toParse, Set<Character>[] key){
         StringBuilder numberValue = new StringBuilder();
-        for (String toFind: toParse)
+        for (Set<Character> toFind: toParse)
             for (int j = 0; j<10; j++)
-                if (unOrderedEquals(toFind, key[j]))
+                if (toFind.equals(key[j]))
                     numberValue.append(j);
         return Integer.parseInt(numberValue.toString());
-    }
-
-    static boolean unorderedContains (String container, String contained){
-        for (char letter: contained.toCharArray())
-            if (!container.contains("" + letter))
-                return false;
-        return true;
-    }
-
-    static boolean unOrderedEquals(String first, String second){
-        if (first.length() != second.length())
-            return false;
-        for (char letter: first.toCharArray())
-            if (!second.contains("" + letter))
-                return false;
-        return true;
-    }
-
-    //Number 1 and number 6 have only one intersection, so we can return as soon as we find it
-    static String intersection(String first, String second){
-        try {
-            for (char letter : first.toCharArray())
-                if (second.contains("" + letter))
-                    return "" + letter;
-        }
-        catch (NullPointerException ignored){
-            //Ignored because this intersection depends on the values of analysed[1] which is initialized after the first iteration
-            // and analysed[6] which is initialized after the second iteration
-        }
-        return "0";//Dead return for first and second iteration
     }
 }
