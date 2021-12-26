@@ -57,18 +57,18 @@ public class Day8 {
             lineSegments = input.nextLine().split("\\|");
             //Parse the patterns into an array
             valuesBeforeAnalysisSet = Arrays.stream(lineSegments[0]
-                                            .split(" "))
-                                            .map(word -> word.chars()
-                                            .mapToObj(c -> (char) c)
-                                            .collect(Collectors.toCollection(HashSet::new)))
-                                            .toArray(HashSet[]::new);
+                            .split(" "))
+                    .map(word -> word.chars()
+                            .mapToObj(c -> (char) c)
+                            .collect(Collectors.toCollection(HashSet::new)))
+                    .toArray(HashSet[]::new);
             //Parse the output into an array
             outputValues = Arrays.stream(lineSegments[1]
-                                .split(" "))
-                                .map(word -> word.chars()
-                                .mapToObj(c -> (char) c)
-                                .collect(Collectors.toCollection(HashSet::new)))
-                                .toArray(HashSet[]::new);
+                            .split(" "))
+                    .map(word -> word.chars()
+                            .mapToObj(c -> (char) c)
+                            .collect(Collectors.toCollection(HashSet::new)))
+                    .toArray(HashSet[]::new);
             //Analyse the vales: put the string patters into array indexes that represent what number the patterns represent
             analysedValues = analyseValues(valuesBeforeAnalysisSet);
             totalValue += parseValue(outputValues, analysedValues);
@@ -130,18 +130,18 @@ public class Day8 {
 
     static void lastAnalysis (Set<Character>[] toAnalyse, Set<Character>[] analysed) {
         for (int i = 0; i<10; i++) {//2, 3, and 5 are the only patterns left
-            if (toAnalyse[i] != null)// continue; //Skips analysis for all values that are null/have been analysed
-                if (toAnalyse[i].containsAll(analysed[1])) {
-                    //Nine is the only one of the three that contains all the lines that one's pattern contains
-                    analysed[3] = toAnalyse[i];
-                    toAnalyse[i] = null;
-                } else if (toAnalyse[i].containsAll(new HashSet<>(analysed[6].stream().filter(analysed[1]::contains).toList()))) {
-                    analysed[5] = toAnalyse[i];
-                    toAnalyse[i] = null;
-                } else {
-                    analysed[2] = toAnalyse[i];
-                    toAnalyse[i] = null;
-                }
+            if (toAnalyse[i] == null) continue; //Skips analysis for all values that are null/have been analysed
+            if (toAnalyse[i].containsAll(analysed[1])) {
+                //Nine is the only one of the three that contains all the lines that one's pattern contains
+                analysed[3] = toAnalyse[i];
+                toAnalyse[i] = null;
+            } else if (toAnalyse[i].containsAll(new HashSet<>(analysed[6].stream().filter(analysed[1]::contains).toList()))) {
+                analysed[5] = toAnalyse[i];
+                toAnalyse[i] = null;
+            } else {
+                analysed[2] = toAnalyse[i];
+                toAnalyse[i] = null;
+            }
         }
     }
 
