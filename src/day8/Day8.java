@@ -9,6 +9,7 @@ public class Day8 {
     /**
      @author David Tejuosho
      @see <a href="https://adventofcode.com/2021/day/8">Day 8</a>
+     @see <a href="https://github.com/DavidTeju/advent-of-code-2021/blob/66f0e5b94fac176171435e64614205dd97d75458/src/day8/Day8.java">Previous solution using Strings</a>
      <p>For partOne, I needed to count the occurences of 1, 4, 7, and 8.</p>
      <p>This was easy because the signal patterns for those numbers had unique lengths of 2, 3, 4, and 7.</p>
      <p> All I had to do was:</p>
