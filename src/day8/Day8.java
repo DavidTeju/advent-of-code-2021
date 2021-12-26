@@ -19,7 +19,7 @@ public class Day8 {
      <p>partTwo was significantly harder</p>
      <p>For this one, I analysed the patterns in a three step process:</p>
      <p>The first step was to identify the patterns for 1, 4, 7, and 8 using the same logic from partOne</p>
-     <p>The second and third steps are explained in-line</p>
+     <p>The second and third steps are explained in-line in methods day8.Day8.secondAnalysis() and day8.Day8.thirdAnalysis()</p>
      */
     public static void main (String[] args) {
         try {
@@ -55,10 +55,13 @@ public class Day8 {
         String[] analysedValues;
         String[] outputValues;
         while (input.hasNext()) {
-            lineSegments = input.nextLine().split("\\|");
             //Divide the line into the pattern and the output.
+            lineSegments = input.nextLine().split("\\|");
+            //Parse the patterns into an array
             valuesBeforeAnalysis = lineSegments[0].split(" ");
+            //Parse the output into an array
             outputValues = lineSegments[1].split(" ");
+            //Analyse the vales: put the string patters into array indexes that represent what number the patterns represent
             analysedValues = analyseValues(valuesBeforeAnalysis);
             totalValue += parseValue(outputValues, analysedValues);
         }
@@ -117,7 +120,6 @@ public class Day8 {
                 }
     }
 
-    //This analysis happens after the first two analysis
     static void lastAnalysis (String[] toAnalyse, String[] analysed) {
         for (int i = 0; i<10; i++) {//2, 3, and 5 are the only patterns left
             if (toAnalyse[i] == null) continue; //Skips analysis for all values that are null/have been analysed
