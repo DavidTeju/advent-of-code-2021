@@ -1,4 +1,4 @@
-package day4;
+package main.java.day4;
 
 import java.io.File;
 import java.io.FileNotFoundException;

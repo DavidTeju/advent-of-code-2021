@@ -1,4 +1,4 @@
-package day7;
+package main.java.day7;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,16 +11,24 @@ public class Day7 {
     }
 
     static int partOne() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src\\day7\\input.txt")).useDelimiter(",");
+        Scanner input = new Scanner(new File("src" + File.separator +  "day7" + File.separator + "input.txt")).useDelimiter(",");
         List<Integer> list = new ArrayList<>();
         while (input.hasNext())
             list.add(Integer.parseInt(input.next()));
         Collections.sort(list);
-        return list.stream().mapToInt(i -> Math.abs(i-list.get((int) Math.ceil(list.size()/2.0)))).sum();
+        return list.stream()
+                .mapToInt(i -> Math.abs(
+                        i-list.get(
+                                (int) Math.ceil(
+                                        list.size()/2.0
+                                )
+                        )
+                ))
+                .sum();
     }
 
     static int partTwo() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src\\day7\\input.txt")).useDelimiter(",");
+        Scanner input = new Scanner(new File("src" + File.separator +  "day7" + File.separator + "input.txt")).useDelimiter(",");
         List<Integer> list = new ArrayList<>();
         while (input.hasNext())
             list.add(Integer.parseInt(input.next()));
@@ -34,9 +42,9 @@ public class Day7 {
         ));
     }
     static int getFuelExpenditure(int movements){
-        if (movements>0)
+        if (movements<=0)
+            return movements;
             return movements+getFuelExpenditure(movements-1);
-        else return movements;
     }
 
 }

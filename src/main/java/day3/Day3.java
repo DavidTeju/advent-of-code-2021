@@ -1,10 +1,7 @@
-package day3;
+package main.java.day3;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Day3 {
     /**
